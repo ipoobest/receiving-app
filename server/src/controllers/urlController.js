@@ -35,8 +35,8 @@ exports.getSingleUrls = async (req, res) => {
       id: id
     },
   })
-  .then((data) => {
-    res.json(data)
+  .then((url) => {
+    res.status(200).json(url)
   })
   .catch(err => console.log(err))
 }
@@ -66,26 +66,25 @@ exports.sendMail =  async(req, res) => {
   res.status(200)
 }
 
-exports.upDateToken = async(req,res) => {
-  let id  = parseInt(req.query.id)
-  let phone_number_callcenter = parseInt(req.query.phone_number_callcenter)
-  var token = await getToken()
+exports.updateToken = async(req,res) => {
+  var phone_number_callcenter = parseInt(req.body.phone_number_callcenter)
+  var newToken = await getToken()
   var userId = "22" + Math.round(new Date().getTime() / 1000) 
   const baseUrl = 'https://192.168.1.4:9001/#/incall?username=' 
-  var urls =   baseUrl + userId + '&?des=' + phone_number_callcenter + '&?token=' + token
+  var newUrls =   baseUrl + userId + '&?des=' + phone_number_callcenter + '&?token=' + newToken
   //Generate New Link
   Urls.update({
-    token: this.token,
-    urls: this.urls
+    token: newToken,
+    urls: newUrls,
   },
   { 
-    where: {id: this.id}
+    where: {id: req.params.id}
   })
-  .then((Urls) => {
-    res.json(urls)
+  .then(() => {
+    res.status(200).send("updated successfully")
   })
   .catch((err) => {
-    res.error(err)
+    res.send(err)
   })
 }
 

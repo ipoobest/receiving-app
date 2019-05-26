@@ -4,9 +4,9 @@ export default {
   getUrls (params) {
     return Api().get('urls', params)
   },
-  
+
   getSingleUrls (params) {
-    return Api().get('urls/' + params.id)
+    return Api().get('url', params)
   },
 
   createUrls (params) {
@@ -16,13 +16,5 @@ export default {
   updateToken (params) {
     return Api().put('token/' + params.id, params)
   }
-
-  // getUrls (params) {
-  //   return Api().post('geturls/', params)
-  // }
-
-//   deleteUrls (id) {
-//     return Api().delete('urls/' + id)
-//   }
 
 }

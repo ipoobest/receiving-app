@@ -161,10 +161,9 @@ export default {
       var response = await UrlsService.getUrls({params: {limit: this.limit}})
       this.users = response.data
     },
-    async getSingleUrls () {
-      var response = await UrlsService.getSingleUrls({
-          params: {id: this.id}
-        })
+    async getSingleUrls (id) {
+      var response = await UrlsService.getSingleUrls({params: {id: id}})
+      console.log('id : ' + id)
       this.user = response.data
     },
     async createUrls () {
@@ -182,9 +181,15 @@ export default {
     },
     async updateLinks (id) {
       await UrlsService.updateToken({
-        id: this.$route.params.id,
-        token: this.title,
-      })       
+        id: id,
+        phone_number_callcenter: this.user.phone_number_callcenter
+      }).then(() => {
+        console.log('generate success')
+        this.getSingleUrls(id)
+        this.getUrls()
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 }
