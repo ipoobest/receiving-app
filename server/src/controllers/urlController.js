@@ -27,14 +27,15 @@ exports.generateUrl = async (req, res) => {
   )
 }
 
-exports.getUrls = async (req, res) => {
-  const urls = await Urls.findAll({
-    order: [
-      ['id', 'DESC'],
-    ],
+exports.getSingleUrls = async (req, res) => {
+  let id  = parseInt(req.query.id)
+  console.log('dddsdfs :' + id)
+  const urls = await Urls.findOne({
+    where: {
+      id: id
+    },
   })
-  .then(data => {
-    console.log('get function')
+  .then((data) => {
     res.json(data)
   })
   .catch(err => console.log(err))
@@ -65,6 +66,29 @@ exports.sendMail =  async(req, res) => {
   res.status(200)
 }
 
+exports.upDateToken = async(req,res) => {
+  let id  = parseInt(req.query.id)
+  let phone_number_callcenter = parseInt(req.query.phone_number_callcenter)
+  var token = await getToken()
+  var userId = "22" + Math.round(new Date().getTime() / 1000) 
+  const baseUrl = 'https://192.168.1.4:9001/#/incall?username=' 
+  var urls =   baseUrl + userId + '&?des=' + phone_number_callcenter + '&?token=' + token
+  //Generate New Link
+  Urls.update({
+    token: this.token,
+    urls: this.urls
+  },
+  { 
+    where: {id: this.id}
+  })
+  .then((Urls) => {
+    res.json(urls)
+  })
+  .catch((err) => {
+    res.error(err)
+  })
+}
+
 exports.settingUrls = async(req,res) => {
   Setting.update({
     base_url: req.body.base_url,
@@ -72,9 +96,10 @@ exports.settingUrls = async(req,res) => {
     subject_email: req.body.subject_email,
     descriptions_email: req.body.descriptions_email
   },
-    {where: {id: 1}}
-  )
-  .then(function(rowsUpdated) {
+  {
+    where: {id: 1}
+  })
+  .then((rowsUpdated) => {
     res.json(rowsUpdated)
   })
   .catch((err) => {

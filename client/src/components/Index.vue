@@ -73,7 +73,7 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                            <button class="btn btn-info"  @click="updateLinks">ส่ง link อีกครั้ง</button>
+                                            <button class="btn btn-info"  @click="updateLinks(user.id)">ส่ง link อีกครั้ง</button>
                                         </div >
                                     </div>
                             </div>
@@ -161,6 +161,12 @@ export default {
       var response = await UrlsService.getUrls({params: {limit: this.limit}})
       this.users = response.data
     },
+    async getSingleUrls () {
+      var response = await UrlsService.getSingleUrls({
+          params: {id: this.id}
+        })
+      this.user = response.data
+    },
     async createUrls () {
       await UrlsService.createUrls({
         email: this.email,
@@ -174,8 +180,11 @@ export default {
         console.log(err)
       })
     },
-    async updateLinks () {
-      // resend Link
+    async updateLinks (id) {
+      await UrlsService.updateToken({
+        id: this.$route.params.id,
+        token: this.title,
+      })       
     }
   }
 }
